@@ -1,0 +1,53 @@
+clear all
+clc 
+close all
+RN=42;
+%%%%%%%%%%%%%%%File name reading%%%%%%%%%%%%%%%%%
+[FullTimeStampsFilename,GPSFilename]=filenameReading(RN);
+
+%FullTimeteps data: formatting time variables
+
+O=readtable(FullTimeStampsFilename);
+O11=O(:,1:2);
+startTime=O11(:,1);
+n=size(startTime);
+n1=n(1,1);
+X=[];
+K=1;
+while K<=n1
+oo1=startTime(K,1);%table
+oo1=O11(K,1);%table
+oo2=oo1{1,1}; %oo2 is a cell array
+oo3=cell2mat(oo2);% oo3 is a char
+u1=str2num(oo3(1:2));%hh
+u2=str2num(oo3(4:5));%mm
+u3=str2num(oo3(7:8));%ss
+u4=str2num(oo3(10:end));%miliecond
+u4=u4/1000;%convert milliecond into seconds
+u3=u3+u4;
+x1=[u1,u2,u3];
+X=[X;x1];
+    K=K+1;
+end%while K<=1
+
+%{
+[startTime,EndTime]=fullTimeStamps2(O11);
+
+V=[startTime,EndTime];
+writematrix(V,'FTime.xlsx')
+%{
+'timeintSec' function calculated minimum time interval and maximum time
+interval
+%}
+[mn,mx]=timeintSec(startTime,EndTime);
+V=[startTime,EndTime];
+writematrix(V,'V.xlsx')
+%}
+%{
+%GPS data
+T = readtable(GPSFilename);
+tm=T(:,4); % Time variable
+
+[TM]=gpTime(tm);
+writematrix(TM,'GPD.xlsx')
+%}

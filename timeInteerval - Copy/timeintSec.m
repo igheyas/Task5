@@ -1,0 +1,14 @@
+function[mn,mx]=timeintSec(startTime,EndTime)
+DF=EndTime-startTime;
+n=size(DF);
+n1=n(1,1);
+D=[];
+K=1;
+while K<=n1
+fd=DF(K,1);
+fd1=seconds(fd);
+D=[D;fd1];
+    K=K+1;
+end%while K<=n1
+mn=min(D);
+mx=max(D);
